@@ -1,4 +1,3 @@
-
 let item = 0;
 let precioTotal = 0;
 const preciosItems = {
@@ -9,6 +8,10 @@ const preciosItems = {
     5: 540000, // Paleta Adidas Metalbone 3.3
     6: 450000, // Paleta Nox At10 Genius 18k
     7: 390000, // Paleta Hirostar Blackstone
+}
+
+function calcularCostoEntrega(total) {
+    return total * 0.05;
 }
 
 if (true) {
@@ -69,9 +72,12 @@ while (continuarComprando) {
 
         if (respuesta == "no" || respuesta == "No") {
             continuarComprando = false;
+        } else if (respuesta !== "si" && respuesta !== "no") {
+            alert("Por favor, ingrese una respuesta válida (Sí/No).");
         }
-
     }
 }
 
-alert(`El total de la compra es: $${precioTotal}. Gracias por su compra.`);
+let totalConEntrega = precioTotal + calcularCostoEntrega(precioTotal);
+
+alert(`El total de la compra es: $${precioTotal}. El costo de entrega es: $${calcularCostoEntrega(precioTotal)}. Total a pagar (incluyendo entrega): $${totalConEntrega}. Gracias por su compra.`);
