@@ -1,48 +1,165 @@
-let carrito = []; // Array para almacenar los productos seleccionados
-let preciosItems = [ // Array de objetos para almacenar los productos con sus precios
-    { nombre: "Camiseta Deportiva Adidas", precio: 25000 },
-    { nombre: "Short Deportivo Adidas", precio: 18000 },
-    { nombre: "Zapatillas Deportivas Adidas", precio: 58000 },
-    { nombre: "Paleta Bullpadel Hack 03 Master", precio: 480000 },
-    { nombre: "Paleta Adidas Metalbone 3.3", precio: 540000 },
-    { nombre: "Paleta Nox At10 Genius 18k", precio: 450000 },
-    { nombre: "Paleta Hirostar Blackstone", precio: 390000 }
+const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+console.log(carrito);
+
+const productos = [
+    {
+        id: "abrigo01",
+        titulo: "Adidas Metalbone 3.2",
+        precio: 560000,
+        img: "./img/01.jpg"
+    },
+    {
+        id: "abrigo02",
+        titulo: "Adidas Metalbone Master LTD 2023",
+        precio: 3000,
+        img: "./img/02.jpg"
+    },
+    {
+        id: "abrigo03",
+        titulo: "Babolat Air Viper 23",
+        precio: 3000,
+        img: "./img/03.jpg"
+    },
+    {
+        id: "abrigo04",
+        titulo: "Bullpadel Vertex 03 Francia LTD 23",
+        precio: 3000,
+        img: "./img/04.jpg"
+    }
 ];
 
-// Método para calcular el costo de la entrega
-function calcularCostoEntrega(total) {
-    return total * 0.05;
+const contenedorProductos = document.querySelector("#productos");
+const carritoVacio = document.querySelector("#carrito-vacio");
+// const carritoComprado = document.querySelector("#carrito-comprado");
+const carritoProductos = document.querySelector("#carrito-productos");
+const carritoTotal = document.querySelector("#carrito-total");
+const vaciar = document.querySelector("#vaciar");
+
+const cargarProductos = (productos) => {
+    contenedorProductos.innerHTML = "";
+    productos.forEach((producto) => {
+    
+        let div = document.createElement("div");
+        div.classList.add("producto");
+        div.innerHTML = `
+            <img class="producto-img" src="${producto.img}">
+            <h3>${producto.titulo}</h3>
+            <p>$${producto.precio}</p>
+        `;
+    
+        let button = document.createElement("button");
+        button.classList.add("producto-btn");
+        button.innerText = "Agregar al carrito";
+        button.addEventListener("click", () => {
+            agregarAlCarrito(producto);
+        });
+    
+        div.append(button);
+        contenedorProductos.append(div);
+    })
 }
+cargarProductos(productos);
 
-// Mensaje de bienvenida
-alert("Bienvenido a A Todo Pádel, nuestra tienda oficial de indumentaria, accesorios y paletas para pádel");
-
-let continuarComprando = true;
-
-while (continuarComprando) {
-    let nuevoItem = parseInt(prompt("Por favor, seleccione lo que desea comprar:\n\n" + preciosItems.map((item, index) => `${index + 1} - ${item.nombre} $${item.precio}`).join('\n')));
-
-    if (nuevoItem >= 1 && nuevoItem <= preciosItems.length) {
-        carrito.push(preciosItems[nuevoItem - 1]);
-        alert(`Se agregó ${preciosItems[nuevoItem - 1].nombre} al carrito de compras. Precio: $${preciosItems[nuevoItem - 1].precio}.`);
+const actualizarCarrito = () => {
+    if (carrito.length === 0) {
+        carritoVacio.classList.remove("d-none");
+        carritoProductos.classList.add("d-none");
+        vaciar.classList.add("d-none");
     } else {
-        alert("Por favor, seleccione un número de artículo válido.");
-    }
+        carritoVacio.classList.add("d-none");
+        carritoProductos.classList.remove("d-none");
+        vaciar.classList.remove("d-none");
 
-    let respuesta = prompt("¿Desea seguir comprando? (Sí/No)").toLowerCase();
+        carritoProductos.innerHTML = "";
+        carrito.forEach((producto) => {
+            let div = document.createElement("div");
+            div.classList.add("carrito-producto");
+            div.innerHTML = `
+                <h3>${producto.titulo}</h3>
+                <p>$${producto.precio}</p>
+                <p>Cant: ${producto.cantidad}</p>
+            `;
 
-    if (respuesta === "no") {
-        continuarComprando = false;
-    } else if (respuesta !== "si") {
-        alert("Por favor, ingrese una respuesta válida (Sí/No).");
+            let buttonMenos = document.createElement("button");
+            buttonMenos.classList.add("carrito-producto-btn");
+            buttonMenos.innerText = "👎";
+            buttonMenos.addEventListener("click", () => {
+                disminuirCantidad(producto);
+            })
+
+            let buttonMas = document.createElement("button");
+            buttonMas.classList.add("carrito-producto-btn");
+            buttonMas.innerText = "👍";
+            buttonMas.addEventListener("click", () => {
+                aumentarCantidad(producto);
+            })
+
+            let buttonX = document.createElement("button");
+            buttonX.classList.add("carrito-producto-btn");
+            buttonX.innerText = "✖️";
+            buttonX.addEventListener("click", () => {
+                borrarDelCarrito(producto);
+            })
+
+            div.append(buttonMenos);
+            div.append(buttonMas);
+            div.append(buttonX);
+            carritoProductos.append(div);
+
+        })
     }
+    actualizarTotal();
+    localStorage.setItem("carrito", JSON.stringify(carrito));
 }
 
-// Calcular el total de la compra
-let precioTotal = carrito.reduce((total, producto) => total + producto.precio, 0);
+const agregarAlCarrito = (producto) => {
+    const itemEncontrado = carrito.find(item => item.id === producto.id);
+    if (itemEncontrado) {
+        itemEncontrado.cantidad++;
+    } else {
+        carrito.push( {...producto, cantidad: 1} );
+    }
+    actualizarCarrito();
+}
 
-// Calcular el total con el costo de la entrega
-let totalConEntrega = precioTotal + calcularCostoEntrega(precioTotal);
+const borrarDelCarrito = (producto) => {
+    const prodIndex = carrito.findIndex(item => item.id === producto.id);
+    carrito.splice(prodIndex, 1);
+    actualizarCarrito();
+}
 
-// Mostrar el resumen de la compra
-alert(`El total de la compra es: $${precioTotal}. El costo de entrega es: $${calcularCostoEntrega(precioTotal)}. Total a pagar (incluyendo entrega): $${totalConEntrega}. Gracias por su compra.`);
+const actualizarTotal = () => {
+    let total = carrito.reduce((acc, prod) => acc + (prod.precio * prod.cantidad), 0);
+    carritoTotal.innerText = `$${total}`;
+}
+
+const disminuirCantidad = (producto) => {
+    const itemEncontrado = carrito.find(item => item.id === producto.id);
+    if (itemEncontrado.cantidad > 1) {
+        itemEncontrado.cantidad--;
+    } else if (itemEncontrado.cantidad === 1) {
+        borrarDelCarrito(itemEncontrado)
+    }
+    actualizarCarrito();
+}
+
+const aumentarCantidad = (producto) => {
+    const itemEncontrado = carrito.find(item => item.id === producto.id);
+    itemEncontrado.cantidad++;
+    actualizarCarrito();
+}
+
+vaciar.addEventListener("click", () => {
+    carrito.length = 0;
+    actualizarCarrito();
+})
+
+actualizarCarrito();
+
+
+const input = document.querySelector("#busqueda");
+
+input.addEventListener("input", () => {
+    const productosFiltrados = productos.filter((producto) => producto.titulo.toLowerCase().includes(input.value.toLowerCase()));
+    cargarProductos(productosFiltrados);
+})
