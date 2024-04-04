@@ -6,14 +6,14 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "Rubik", sans-serif;
-    
-    
+
+
 }
 
 :root {
-    --clr-black: rgb(151, 222, 231);
-    --clr-white: #5c5c5c;
-    --clr-accent: #74bdee;
+    --clr-black: #25a4a7;
+    --clr-white: #ffffff;
+    --clr-accent: #F29325;
 }
 
 .container {
@@ -27,7 +27,12 @@ img {
     display: block;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: "Bricolage Grotesque", sans-serif;
 }
 
@@ -48,7 +53,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .main {
     padding-block: 2rem;
-    background-color: #5c5c5c;
+    background-color: #F4E2DE;
 }
 
 .titulo {

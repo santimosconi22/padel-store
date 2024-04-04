@@ -3,34 +3,57 @@ console.log(carrito);
 
 const productos = [
     {
-        id: "abrigo01",
+        id: "Paleta01",
         titulo: "Adidas Metalbone 3.2",
         precio: 560000,
         img: "./img/01.jpg"
     },
     {
-        id: "abrigo02",
-        titulo: "Adidas Metalbone Master LTD 2023",
-        precio: 3000,
+        id: "paleta02",
+        titulo: "Adidas Metalbone Master LTD",
+        precio: 480000,
         img: "./img/02.jpg"
     },
     {
-        id: "abrigo03",
+        id: "paleta03",
         titulo: "Babolat Air Viper 23",
-        precio: 3000,
+        precio: 430000,
         img: "./img/03.jpg"
     },
     {
-        id: "abrigo04",
-        titulo: "Bullpadel Vertex 03 Francia LTD 23",
-        precio: 3000,
+        id: "paleta04",
+        titulo: "Bullpadel Vertex 03 Francia LTD",
+        precio: 520000,
         img: "./img/04.jpg"
+    },
+    {
+        id: "paleta05",
+        titulo: "Siux Diablo Revolution II",
+        precio: 490000,
+        img: "./img/05.jpg"
+    },
+    {
+        id: "paleta06",
+        titulo: "Dunlop Galactica Lite",
+        precio: 280000,
+        img: "./img/06.jpg"
+    },
+    {
+        id: "paleta07",
+        titulo: "Urich Dropper Carbon Flex Tech",
+        precio: 260000,
+        img: "./img/07.jpg"
+    },
+    {
+        id: "paleta08",
+        titulo: "Steel Custom Imperia Carbono",
+        precio: 225000,
+        img: "./img/08.jpg"
     }
 ];
 
 const contenedorProductos = document.querySelector("#productos");
 const carritoVacio = document.querySelector("#carrito-vacio");
-// const carritoComprado = document.querySelector("#carrito-comprado");
 const carritoProductos = document.querySelector("#carrito-productos");
 const carritoTotal = document.querySelector("#carrito-total");
 const vaciar = document.querySelector("#vaciar");
@@ -38,7 +61,7 @@ const vaciar = document.querySelector("#vaciar");
 const cargarProductos = (productos) => {
     contenedorProductos.innerHTML = "";
     productos.forEach((producto) => {
-    
+
         let div = document.createElement("div");
         div.classList.add("producto");
         div.innerHTML = `
@@ -46,14 +69,14 @@ const cargarProductos = (productos) => {
             <h3>${producto.titulo}</h3>
             <p>$${producto.precio}</p>
         `;
-    
+
         let button = document.createElement("button");
         button.classList.add("producto-btn");
         button.innerText = "Agregar al carrito";
         button.addEventListener("click", () => {
             agregarAlCarrito(producto);
         });
-    
+
         div.append(button);
         contenedorProductos.append(div);
     })
@@ -117,7 +140,7 @@ const agregarAlCarrito = (producto) => {
     if (itemEncontrado) {
         itemEncontrado.cantidad++;
     } else {
-        carrito.push( {...producto, cantidad: 1} );
+        carrito.push({ ...producto, cantidad: 1 });
     }
     actualizarCarrito();
 }
@@ -163,3 +186,4 @@ input.addEventListener("input", () => {
     const productosFiltrados = productos.filter((producto) => producto.titulo.toLowerCase().includes(input.value.toLowerCase()));
     cargarProductos(productosFiltrados);
 })
+
